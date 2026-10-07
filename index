@@ -1,0 +1,576 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>American Yield</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rye&family=Alegreya:ital,wght@0,700;0,800;1,500&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: square "video" stage. Top = headline, middle = diagram, bottom = porch where two deadpan farmers deliver quips while factual captions run between them. Deliberately single-theme (umber player chrome, Grant Wood paper stage). */
+:root{
+  --sky:#E9E4D2;        /* stage ground: prairie sky / old canvas */
+  --ink:#26251F;        /* Sunday-best black */
+  --ink-2:#5E584A;
+  --card:#F7F3E6;
+  --olive:#7E8754;      /* Iowa hills */
+  --barn:#8E3B2A;       /* barn red: friction, closed */
+  --gold:#B8862A;       /* interest */
+  --rail:#2F5FD0;       /* the token: the one modern thing in the painting */
+  --frame:#1C1915;
+  --frame-2:#29241E;
+  --frame-line:#40382E;
+  --chrome-fg:#ECE5D3;
+  --chrome-dim:#A69C88;
+  --f-title:"Rye", "Rockwell", Georgia, serif;
+  --f-head:"Alegreya", Georgia, "Times New Roman", serif;
+  --f-body:"Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  color-scheme:dark;
+}
+html,body{background:var(--frame);color:var(--chrome-fg)}
+body{font-family:var(--f-body);font-size:15px;line-height:1.5;padding:24px 16px 48px}
+.wrap{max-width:680px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+header h1{font-family:var(--f-title);font-weight:400;font-size:clamp(26px,5.4vw,36px);line-height:1.1;margin:0;letter-spacing:.01em}
+header p{margin:6px 0 0;color:var(--chrome-dim);max-width:62ch}
+
+/* ---------- stage ---------- */
+.stage{position:relative;width:100%;aspect-ratio:1/1;max-width:100%;background:var(--sky);color:var(--ink);
+  container-type:inline-size;overflow:hidden;border-radius:6px;
+  background-image:linear-gradient(180deg,rgba(255,255,255,.35),rgba(255,255,255,0) 55%)}
+.stage:fullscreen{width:min(100vw,100vh);height:min(100vw,100vh);margin:auto;border-radius:0}
+.stage::backdrop{background:var(--frame)}
+.layer,.scene{position:absolute;inset:0}
+.scene{opacity:0;visibility:hidden}
+.scene.s0{opacity:1;visibility:visible}
+#hosts{opacity:0;visibility:hidden}
+.eyebrow{position:absolute;left:7%;top:5.5%;font-family:var(--f-mono);font-size:2.3cqw;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2)}
+.hl{position:absolute;left:7%;right:7%;top:9.5%;font-family:var(--f-head);font-weight:800;font-size:5.6cqw;line-height:1.05;letter-spacing:-.005em;margin:0}
+svg.vis{position:absolute;inset:0;width:100%;height:100%}
+svg text{font-family:var(--f-body)}
+svg text:not([fill]){fill:var(--ink)}
+svg .mono{font-family:var(--f-mono)}
+svg .disp{font-family:var(--f-head);font-weight:800}
+
+.title-card{position:absolute;left:7%;right:7%;top:6%}
+.title-card .kicker{font-family:var(--f-mono);font-size:2.4cqw;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-2)}
+.title-card h2{font-family:var(--f-title);font-weight:400;font-size:8.6cqw;line-height:1;margin:1.6cqw 0 0;color:var(--ink)}
+.title-card p{font-family:var(--f-head);font-style:italic;font-weight:500;font-size:3.4cqw;margin:1.6cqw 0 0;color:var(--ink-2);max-width:40ch}
+
+.fine{position:absolute;left:7%;right:7%;top:20%;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:1.7cqw}
+.fine li{display:grid;grid-template-columns:3.4cqw 1fr;gap:1.8cqw;font-size:3.15cqw;line-height:1.22;align-items:start}
+.fine li span.mk{width:3cqw;height:3cqw;margin-top:.3cqw;border:.45cqw solid var(--barn);border-radius:50%;display:block}
+
+.cap{position:absolute;left:25%;right:25%;bottom:3%;min-height:9cqw;display:flex;align-items:center;justify-content:center;text-align:center;
+  font-size:2.95cqw;line-height:1.22;font-weight:500;color:var(--sky);background:var(--ink);padding:1.5cqw 2.2cqw;border-radius:1.2cqw;text-wrap:balance}
+.cap:empty{visibility:hidden}
+.stage.clean .cap{display:none}
+
+.bubble{position:absolute;left:23%;right:23%;bottom:24.5%;background:var(--card);color:var(--ink);border:.45cqw solid var(--ink);border-radius:2.4cqw;
+  padding:1.4cqw 2.4cqw;font-family:var(--f-head);font-style:italic;font-weight:500;font-size:3.7cqw;line-height:1.15;text-align:center;
+  opacity:0;transform:scale(.85);transition:opacity .15s ease, transform .18s ease;pointer-events:none}
+.bubble.on{opacity:1;transform:none}
+.bubble::after{content:"";position:absolute;bottom:-1.85cqw;width:3cqw;height:3cqw;background:var(--card);border-right:.45cqw solid var(--ink);border-bottom:.45cqw solid var(--ink);transform:rotate(45deg)}
+.bubble.P::after{left:7%}
+.bubble.H::after{right:7%}
+.bubble.end{left:56%;right:4%;bottom:auto;top:30%}
+@media (prefers-reduced-motion:reduce){.bubble{transition:none}}
+
+/* ---------- controls ---------- */
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+button{font:inherit;font-size:14px;color:var(--chrome-fg);background:var(--frame-2);border:1px solid var(--frame-line);border-radius:6px;padding:8px 14px;cursor:pointer}
+button:hover{border-color:var(--chrome-dim)}
+button:focus-visible,input:focus-visible{outline:2px solid #D9A55A;outline-offset:2px}
+button.primary{background:var(--barn);border-color:var(--barn);color:#FFF8EC;font-weight:600;min-width:84px}
+button[aria-pressed="true"]{background:var(--frame-line)}
+.scrub{flex:1 1 220px;display:flex;align-items:center;gap:10px;min-width:0}
+.scrub input{flex:1;min-width:0;accent-color:#C9813F}
+.time{font-family:var(--f-mono);font-size:13px;color:var(--chrome-dim);font-variant-numeric:tabular-nums;white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font-size:12.5px;padding:5px 10px;border-radius:999px;background:transparent}
+.chips button.on{background:var(--chrome-fg);color:var(--frame);border-color:var(--chrome-fg)}
+
+/* ---------- storyboard ---------- */
+section.board h2{font-family:var(--f-head);font-weight:800;font-size:21px;margin:12px 0 4px}
+section.board p{color:var(--chrome-dim);margin:0 0 12px;max-width:62ch}
+.script{width:100%;border-collapse:collapse;font-size:14px}
+.script td{padding:8px 10px 8px 0;border-top:1px solid var(--frame-line);vertical-align:top}
+.script td.t{font-family:var(--f-mono);color:var(--chrome-dim);font-variant-numeric:tabular-nums;white-space:nowrap;width:4.5em}
+.script td.w{white-space:nowrap;width:6.5em;font-size:13px;color:var(--chrome-dim)}
+.script tr.q td.w{color:#E0A866}
+.script tr.q td:last-child{font-family:var(--f-head);font-style:italic;font-size:15px}
+.script tr{cursor:pointer}
+.script tr:hover td{color:var(--chrome-fg)}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>American Yield</h1>
+    <p>A 94-second explainer on tokenized money market funds, presented by two very serious farmers. The captions are burned in and the jokes are in speech bubbles. Use Fullscreen to screen-record it for social.</p>
+  </header>
+
+  <div class="stage" id="stage" aria-label="Animated explainer">
+    <!-- 0 title -->
+    <div class="scene s0" id="s0">
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g id="t-art"></g></svg>
+      <div class="title-card">
+        <div class="kicker">Tokenized money market funds</div>
+        <h2>American Yield</h2>
+        <p>Explained by Hiram and Prudence, who have never once smiled.</p>
+      </div>
+    </div>
+
+    <!-- porch: persistent hosts for scenes 1-7 -->
+    <div class="layer" id="hosts">
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g id="porch"></g></svg>
+    </div>
+
+    <!-- 1 idle cash -->
+    <div class="scene" id="s1">
+      <div class="eyebrow">Plate I · The problem</div>
+      <h3 class="hl">Your cash is napping.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)">
+        <g id="acct">
+          <rect x="90" y="150" width="220" height="120" rx="10" fill="#F7F3E6" stroke="#26251F" stroke-width="2"/>
+          <text x="110" y="180" font-size="11" fill="#5E584A" class="mono">CHECKING ACCOUNT</text>
+          <text x="110" y="222" font-size="32" class="mono" font-weight="600">$10,000.00</text>
+          <text x="110" y="252" font-size="12" fill="#5E584A">Interest earned: barely anything</text>
+        </g>
+        <g id="zzz">
+          <text x="300" y="150" font-size="20" fill="#2F5FD0" class="disp">z</text>
+          <text x="318" y="128" font-size="26" fill="#2F5FD0" class="disp">z</text>
+          <text x="340" y="104" font-size="32" fill="#2F5FD0" class="disp">Z</text>
+        </g>
+      </g></svg>
+    </div>
+
+    <!-- 2 the fund -->
+    <div class="scene" id="s2">
+      <div class="eyebrow">Plate II · The basics</div>
+      <h3 class="hl">Meet the money market fund.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)">
+        <g id="people"></g>
+        <text x="30" y="318" font-size="12" fill="#5E584A">Neighbors</text>
+        <line x1="62" y1="225" x2="166" y2="225" stroke="#BDB49A" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <line x1="234" y1="225" x2="300" y2="225" stroke="#BDB49A" stroke-width="1.5" stroke-dasharray="3 4"/>
+        <g id="fund">
+          <path d="M168,190 Q168,158 200,158 Q232,158 232,190 Z" fill="#6E2C1F"/>
+          <rect x="168" y="190" width="64" height="76" fill="#8E3B2A"/>
+          <line x1="168" y1="206" x2="232" y2="206" stroke="#B9634F" stroke-width="1.2"/>
+          <line x1="168" y1="250" x2="232" y2="250" stroke="#B9634F" stroke-width="1.2"/>
+          <text x="200" y="224" font-size="13" text-anchor="middle" class="disp" fill="#F7F3E6">THE</text>
+          <text x="200" y="241" font-size="13" text-anchor="middle" class="disp" fill="#F7F3E6">FUND</text>
+        </g>
+        <g id="bills"></g>
+        <text x="300" y="318" font-size="12" fill="#5E584A">Short-term IOUs</text>
+        <g id="peg">
+          <rect x="150" y="276" width="100" height="26" rx="13" fill="#B8862A"/>
+          <text x="200" y="293" font-size="12" text-anchor="middle" fill="#FFFFFF" class="mono" font-weight="600">$1.00 / share</text>
+        </g>
+        <g id="flow2"></g>
+      </g></svg>
+    </div>
+
+    <!-- 3 old plumbing -->
+    <div class="scene" id="s3">
+      <div class="eyebrow">Plate III · The old plumbing</div>
+      <h3 class="hl">Bankers' hours. Ugh.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)">
+        <g id="clock">
+          <rect x="140" y="124" width="120" height="30" rx="4" fill="#26251F"/>
+          <text id="clkA" x="200" y="144" font-size="14" text-anchor="middle" fill="#E9E4D2" class="mono">Fri 4:58 PM</text>
+          <text id="clkB" x="200" y="144" font-size="14" text-anchor="middle" fill="#E9E4D2" class="mono" opacity="0">Fri 5:01 PM</text>
+        </g>
+        <g id="chain"></g>
+        <circle id="order" cx="44" cy="180" r="8" fill="#2F5FD0"/>
+        <g id="closed" transform="rotate(-8 240 220)">
+          <rect x="170" y="201" width="140" height="38" rx="4" fill="#F7F3E6" fill-opacity=".85" stroke="#8E3B2A" stroke-width="3"/>
+          <text x="240" y="227" font-size="20" text-anchor="middle" fill="#8E3B2A" class="disp" letter-spacing="3">CLOSED</text>
+        </g>
+        <text id="settle" x="200" y="290" font-size="13" text-anchor="middle" class="mono" fill="#5E584A">Settles: next business day</text>
+      </g></svg>
+    </div>
+
+    <!-- 4 tokenization -->
+    <div class="scene" id="s4">
+      <div class="eyebrow">Plate IV · The change</div>
+      <h3 class="hl">A brand-new record book.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)">
+        <g id="net"></g>
+        <g id="cert">
+          <rect x="150" y="150" width="100" height="128" rx="3" fill="#F7F3E6" stroke="#26251F" stroke-width="2"/>
+          <rect x="157" y="157" width="86" height="114" rx="2" fill="none" stroke="#26251F" stroke-width=".8" stroke-dasharray="2 2"/>
+          <text x="200" y="196" font-size="10" text-anchor="middle" class="mono" fill="#5E584A">FUND SHARE</text>
+          <text x="200" y="226" font-size="20" text-anchor="middle" class="disp">1</text>
+          <line x1="172" y1="246" x2="228" y2="246" stroke="#26251F" stroke-width="1"/>
+          <text x="200" y="260" font-size="8" text-anchor="middle" fill="#5E584A">paper record, est. 1930</text>
+        </g>
+        <g id="token">
+          <circle cx="200" cy="214" r="42" fill="#2F5FD0"/>
+          <circle cx="200" cy="214" r="34" fill="none" stroke="#FFFFFF" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <text x="200" y="210" font-size="10" text-anchor="middle" fill="#FFFFFF" class="mono">1 SHARE</text>
+          <text x="200" y="228" font-size="15" text-anchor="middle" fill="#FFFFFF" class="mono" font-weight="600">$1.00</text>
+        </g>
+        <text id="netlbl" x="200" y="322" font-size="12" text-anchor="middle" fill="#5E584A">Every copy of the record book stays in sync</text>
+      </g></svg>
+    </div>
+
+    <!-- 5 what changes -->
+    <div class="scene" id="s5">
+      <div class="eyebrow">Plate V · What changes for you</div>
+      <h3 class="hl" id="s5hl">It moves any hour.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)">
+        <g id="b5a">
+          <rect x="140" y="124" width="120" height="30" rx="4" fill="#26251F"/>
+          <text x="200" y="144" font-size="14" text-anchor="middle" fill="#E9E4D2" class="mono">Sun 2:14 AM</text>
+          <rect x="30" y="185" width="110" height="64" rx="8" fill="#F7F3E6" stroke="#26251F" stroke-width="2"/>
+          <text x="85" y="222" font-size="13" text-anchor="middle">Wallet A</text>
+          <rect x="260" y="185" width="110" height="64" rx="8" fill="#F7F3E6" stroke="#26251F" stroke-width="2"/>
+          <text x="315" y="222" font-size="13" text-anchor="middle">Wallet B</text>
+          <line x1="140" y1="217" x2="260" y2="217" stroke="#BDB49A" stroke-width="1.5" stroke-dasharray="3 4"/>
+          <circle id="tokA" cx="85" cy="170" r="12" fill="#2F5FD0"/>
+          <text id="okA" x="200" y="288" font-size="14" text-anchor="middle" fill="#2F5FD0" class="mono" font-weight="600">✓ Settled</text>
+        </g>
+        <g id="b5b">
+          <text x="200" y="168" font-size="11" text-anchor="middle" fill="#5E584A" class="mono">TOKEN BALANCE</text>
+          <text id="ctr" x="200" y="222" font-size="38" text-anchor="middle" class="mono" font-weight="600">$10,000.00</text>
+          <text id="day" x="200" y="252" font-size="14" text-anchor="middle" fill="#B8862A" class="mono" font-weight="600">Day 1</text>
+          <text x="200" y="290" font-size="11" text-anchor="middle" fill="#5E584A">Illustrative numbers. Real yields vary.</text>
+        </g>
+        <g id="b5c"></g>
+      </g></svg>
+    </div>
+
+    <!-- 6 why care -->
+    <div class="scene" id="s6">
+      <div class="eyebrow">Plate VI · Why care</div>
+      <h3 class="hl">Cash that earns while it waits.</h3>
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g transform="translate(40,-18) scale(.8)"><g id="who"></g></g></svg>
+    </div>
+
+    <!-- 7 fine print -->
+    <div class="scene" id="s7">
+      <div class="eyebrow">Plate VII · The fine print</div>
+      <h3 class="hl">New rails, real risks.</h3>
+      <ul class="fine" id="fine">
+        <li><span class="mk"></span><span>Not a bank deposit. No government deposit insurance.</span></li>
+        <li><span class="mk"></span><span>Rare, but these funds have dipped below $1 a share in a crisis.</span></li>
+        <li><span class="mk"></span><span>Access is often limited to approved, verified investors.</span></li>
+        <li><span class="mk"></span><span>New tech, new risks: code bugs, hacks, lost keys.</span></li>
+        <li><span class="mk"></span><span>Cashing out to dollars may still follow the fund's hours.</span></li>
+      </ul>
+    </div>
+
+    <!-- 8 end card -->
+    <div class="scene" id="s8">
+      <svg class="vis" viewBox="0 0 400 400" aria-hidden="true"><g id="e-art"></g></svg>
+      <div class="title-card">
+        <div class="kicker">American Yield · fin</div>
+        <h2>Same fund.<br>New rails.</h2>
+      </div>
+    </div>
+
+    <div class="bubble" id="bubble"></div>
+    <div class="cap" id="cap" aria-live="off"></div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="play" type="button">Play</button>
+    <button id="restart" type="button">Restart</button>
+    <div class="scrub"><input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Seek"><span class="time" id="time">0:00 / 1:34</span></div>
+    <button id="clean" type="button" aria-pressed="false">Hide captions</button>
+    <button id="fs" type="button">Fullscreen</button>
+  </div>
+  <div class="chips" id="chips"></div>
+
+  <section class="board">
+    <h2>Script and storyboard</h2>
+    <p>Narrator lines carry the facts. Hiram and Prudence carry the jokes. Click any line to jump there.</p>
+    <table class="script"><tbody id="script"></tbody></table>
+  </section>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+(function(){
+const $ = s => document.querySelector(s);
+const NS = "http://www.w3.org/2000/svg";
+function mk(tag, attrs, parent, text){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(text!=null)e.textContent=text;parent.appendChild(e);return e;}
+const INK="#26251F", RAIL="#2F5FD0", GOLD="#B8862A", CARD="#F7F3E6", DIM="#5E584A", BARN="#8E3B2A", SKIN="#D8B28C", OLIVE="#7E8754";
+
+/* ---------- characters ---------- */
+function hiram(parent,tx,ty,s,pre,opts={}){
+  const g=mk("g",{transform:`translate(${tx} ${ty}) scale(${s})`},parent);
+  // pitchfork
+  mk("rect",{x:-6,y:-4,width:3.6,height:150,fill:"#7A5A34"},g);
+  const T=opts.tine||-32;
+  mk("path",{d:`M-15,-4 Q-4.2,6 6.6,-4 M-15,-4 L-15,${T} M-4.2,2 L-4.2,${T-2} M6.6,-4 L6.6,${T}`,stroke:"#4A4842","stroke-width":2.4,fill:"none","stroke-linecap":"round"},g);
+  const tips=mk("g",{id:pre+"Tips",opacity:opts.tips?1:0},g);
+  [-15,-4.2,6.6].forEach(x=>mk("circle",{cx:x,cy:T,r:4.6,fill:RAIL,stroke:"#FFFFFF","stroke-width":.8},tips));
+  mk("path",{d:"M4,146 L9,98 Q50,82 91,98 L96,146 Z",fill:"#2A2822"},g);
+  mk("path",{d:"M37,146 L39,90 L61,90 L63,146Z",fill:"#ECE6D6"},g);
+  mk("circle",{cx:50,cy:95,r:1.4,fill:"#B9A98A"},g);
+  mk("rect",{x:39,y:118,width:22,height:28,fill:"#3F5B74"},g);
+  mk("rect",{x:39,y:94,width:5,height:26,fill:"#3F5B74"},g);
+  mk("rect",{x:56,y:94,width:5,height:26,fill:"#3F5B74"},g);
+  mk("rect",{x:42,y:66,width:16,height:28,fill:SKIN},g);
+  mk("ellipse",{cx:29,cy:48,rx:4,ry:7,fill:SKIN},g);
+  mk("ellipse",{cx:71,cy:48,rx:4,ry:7,fill:SKIN},g);
+  mk("ellipse",{cx:50,cy:46,rx:21,ry:29,fill:SKIN},g);
+  mk("path",{d:"M30,42 Q30,27 37,22 M70,42 Q70,27 63,22",stroke:"#8E887A","stroke-width":3.2,fill:"none","stroke-linecap":"round"},g);
+  mk("path",{d:"M37,37 L46,38 M54,38 L63,37",stroke:"#5A5245","stroke-width":1.7,"stroke-linecap":"round"},g);
+  mk("circle",{cx:42,cy:45,r:6.5,fill:"#F2EEE3","fill-opacity":.3,stroke:"#2E2A24","stroke-width":1.3},g);
+  mk("circle",{cx:58,cy:45,r:6.5,fill:"#F2EEE3","fill-opacity":.3,stroke:"#2E2A24","stroke-width":1.3},g);
+  mk("line",{x1:48.5,y1:45,x2:51.5,y2:45,stroke:"#2E2A24","stroke-width":1.3},g);
+  const eyes=mk("g",{id:pre+"Eyes"},g);
+  mk("circle",{cx:42,cy:46,r:1.8,fill:"#1E1B17"},eyes);mk("circle",{cx:58,cy:46,r:1.8,fill:"#1E1B17"},eyes);
+  mk("path",{d:"M50,48 L48,60 L52.5,60",stroke:"#A07B57","stroke-width":1.2,fill:"none"},g);
+  mk("path",{d:"M35,58 Q36,66 41,71 M65,58 Q64,66 59,71",stroke:"#B48D66","stroke-width":1.1,fill:"none"},g);
+  mk("line",{id:pre+"Mouth",x1:44,y1:67.5,x2:56,y2:67.5,stroke:"#6B4A36","stroke-width":1.9,"stroke-linecap":"round"},g);
+  mk("path",{id:pre+"Smile",d:"M44,66.6 Q50,70 56,66.6",stroke:"#6B4A36","stroke-width":1.9,fill:"none","stroke-linecap":"round",opacity:0},g);
+  return g;
+}
+function prudence(parent,tx,ty,s,pre){
+  const g=mk("g",{transform:`translate(${tx} ${ty}) scale(${s})`},parent);
+  mk("path",{d:"M8,146 L14,100 Q50,88 86,100 L92,146 Z",fill:"#3B2E26"},g);
+  mk("path",{d:"M24,146 L27,108 Q50,102 73,108 L76,146Z",fill:"#8C6B3F"},g);
+  let pts=[];for(let i=0;i<=16;i++){const x=27+i*46/16;pts.push(x+","+(i%2?105.2:108.6));}
+  mk("polyline",{points:pts.join(" "),fill:"none",stroke:"#EDE6D2","stroke-width":1.2},g);
+  mk("rect",{x:43,y:70,width:14,height:26,fill:SKIN},g);
+  mk("ellipse",{cx:50,cy:98,rx:20,ry:7,fill:"#F3EFE4",stroke:"#CFC6B0","stroke-width":.8},g);
+  mk("ellipse",{cx:50,cy:101,rx:4,ry:5,fill:"#C9A46A",stroke:"#6B4A2A","stroke-width":1},g);
+  mk("ellipse",{cx:50,cy:50,rx:18,ry:24,fill:SKIN},g);
+  mk("path",{d:"M31,56 Q28,24 50,24 Q72,24 69,56 Q67,38 50,33 Q33,38 31,56 Z",fill:"#6A4527"},g);
+  mk("path",{d:"M50,24 L50,33",stroke:"#4A2F1A","stroke-width":1},g);
+  mk("path",{d:"M67,64 q6,4 2.5,10 q-3.5,4 -5.5,0",stroke:"#6A4527","stroke-width":1.6,fill:"none"},g);
+  mk("path",{d:"M40,43.5 L47,42.8 M53,42.8 L60,43.5",stroke:"#5A4030","stroke-width":1.5,"stroke-linecap":"round"},g);
+  const eyes=mk("g",{id:pre+"Eyes"},g);
+  mk("circle",{cx:44,cy:49,r:1.7,fill:"#1E1B17"},eyes);mk("circle",{cx:56,cy:49,r:1.7,fill:"#1E1B17"},eyes);
+  mk("path",{d:"M50,50 L49,59 L51.8,59",stroke:"#A07B57","stroke-width":1.1,fill:"none"},g);
+  mk("line",{x1:45,y1:66,x2:55,y2:66,stroke:"#7A4A3A","stroke-width":1.8,"stroke-linecap":"round"},g);
+  return g;
+}
+function farmstead(parent){
+  mk("path",{d:"M0,300 Q70,262 150,286 T300,278 T400,268 L400,400 L0,400Z",fill:OLIVE},parent);
+  mk("path",{d:"M0,330 Q90,300 200,322 T400,312 L400,400 L0,400Z",fill:"#6B7446"},parent);
+  [[34,268,15],[368,256,13],[322,268,10]].forEach(([x,y,r])=>{mk("rect",{x:x-1.5,y:y,width:3,height:r*1.4,fill:"#5B4630"},parent);mk("circle",{cx:x,cy:y,r:r,fill:"#55613A"},parent);});
+  mk("path",{d:"M120,300 L230,160 L340,300 Z",fill:"#EDE8D8",stroke:INK,"stroke-width":1.5},parent);
+  for(let y=200;y<300;y+=9){const half=(y-160)*110/140;mk("line",{x1:230-half+2,y1:y,x2:230+half-2,y2:y,stroke:"#D3CCB6","stroke-width":.8},parent);}
+  mk("path",{d:"M214,262 L214,222 Q214,198 230,186 Q246,198 246,222 L246,262 Z",fill:"#3A3832",stroke:INK,"stroke-width":1.5},parent);
+  mk("path",{d:"M230,190 L230,262 M214,226 L246,226 M222,196 Q230,212 238,196",stroke:"#EDE8D8","stroke-width":1.4,fill:"none"},parent);
+}
+// title + end compositions
+[["#t-art","t"],["#e-art","e"]].forEach(([sel,pre])=>{const p=$(sel);farmstead(p);prudence(p,80,212,1.36,pre+"P");hiram(p,206,190,1.48,pre+"H",{tips:false});});
+// porch
+const porch=$("#porch");
+mk("path",{d:"M0,268 Q60,252 120,262 T240,258 T400,256 L400,400 L0,400Z",fill:OLIVE,opacity:.55},porch);
+prudence(porch,2,270,.94,"p");
+hiram(porch,300,270,.94,"h",{tine:-17});
+[[50,"PRUDENCE"],[350,"HIRAM"]].forEach(([x,t])=>{mk("rect",{x:x-26,y:385,width:52,height:11,rx:1.5,fill:"#C9A75E",stroke:"#7A5E2A","stroke-width":.6},porch);mk("text",{x:x,y:393,"font-size":6.4,"text-anchor":"middle",class:"mono","letter-spacing":".8",fill:"#3A2C14"},porch,t);});
+
+/* ---------- script ---------- */
+const SCENES=[["s0","Title",0],["s1","Idle cash",5],["s2","The fund",13],["s3","Old plumbing",27],["s4","Tokenization",38],["s5","What changes",50],["s6","Why care",68],["s7","Fine print",77],["s8","End",88]];
+const TOTAL=94;
+const CAPS=[
+ [0,""],
+ [5,"Money in a checking account usually earns little or nothing."],
+ [9,"It just sits there, waiting for you to need it."],
+ [13,"A money market fund pools cash from lots of people."],
+ [17.5,"It lends that cash short-term to very safe borrowers, mostly the U.S. government."],
+ [22,"The interest flows back to you. Each share aims to stay worth $1.00."],
+ [27,"But buying and selling runs through several middlemen."],
+ [32,"Orders move during business hours and can take until the next business day to settle."],
+ [38,"Tokenization records each fund share as a digital token on a blockchain."],
+ [42.5,"A blockchain is a shared record book that many computers keep in sync."],
+ [46.5,"Same fund. Same safe assets. New record keeping."],
+ [50,"Tokens can move between approved wallets any hour, any day, often within minutes."],
+ [56,"Interest builds up daily, and some funds add it to your balance as new tokens."],
+ [62,"The token can also be pledged as collateral or used in other apps without cashing out first."],
+ [68,"So far, the biggest users are businesses, crypto firms, and traders."],
+ [72.5,"The bet is that these rails eventually reach the money apps everyone uses."],
+ [77,"Before you get excited, read the fine print."],
+ [88,""]
+];
+const QUIPS=[
+ [6.4,9.4,"H","We keep ours in the mattress."],
+ [9.6,12.6,"P","Pays about the same."],
+ [19.2,21.8,"P","So it's a co-op. For cash."],
+ [24.6,26.8,"H","And it don't need milking."],
+ [28.6,31.8,"H","We're up at 4 a.m. The money's up at 9."],
+ [33.2,36.6,"P","Closes at 5. Same as the feed store."],
+ [39.2,42.2,"H","Paper certificate. Like Grandpa's."],
+ [44.4,47,"P","Grandpa would've hated this."],
+ [47.2,49.6,"H","Grandpa hated everything."],
+ [52.4,55.4,"H","Sent it during the 2 a.m. milking."],
+ [57.6,61.4,"P","The hens lay daily. Now so does the money."],
+ [64,67.6,"H","Borrowed against it. Kept it. Kept the cow."],
+ [69.4,72.3,"P","Cash that works harder than Pa."],
+ [73,76.6,"H","..."],
+ [79,82.4,"P","Not insured. Not a bank. Not a cow."],
+ [84,87.4,"H","Read it twice. Then once more."],
+ [90.6,93.8,"H","Well. I'll be."]
+];
+const NAMES={H:"Hiram",P:"Prudence"};
+
+/* ---------- diagram content ---------- */
+const peopleY=[140,170,200,230,260,290];
+const people=$("#people"), flow2=$("#flow2"), bills=$("#bills");
+peopleY.forEach(y=>{mk("circle",{cx:50,cy:y,r:8,fill:INK},people);});
+const billY=[160,206,252];
+billY.forEach(y=>{const g=mk("g",{},bills);mk("rect",{x:300,y:y,width:76,height:34,rx:4,fill:"#D9B95E",stroke:"#8C6B3F","stroke-width":1.5},g);
+  mk("line",{x1:300,y1:y+11,x2:376,y2:y+11,stroke:"#B8974A","stroke-width":1},g);mk("line",{x1:300,y1:y+23,x2:376,y2:y+23,stroke:"#B8974A","stroke-width":1},g);
+  mk("rect",{x:312,y:y+9,width:52,height:16,rx:2,fill:CARD},g);mk("text",{x:338,y:y+21,"font-size":9.5,"text-anchor":"middle",class:"mono"},g,"GOV'T IOU");});
+const blue2=peopleY.map(y=>mk("circle",{cx:50,cy:y,r:5,fill:RAIL},flow2));
+const out2=billY.map(()=>mk("circle",{cx:200,cy:225,r:5,fill:RAIL},flow2));
+const gold2=billY.map(y=>mk("circle",{cx:338,cy:y+17,r:5,fill:GOLD},flow2));
+const goldBack=peopleY.map(()=>mk("circle",{cx:200,cy:225,r:5,fill:GOLD},flow2));
+
+const chain=$("#chain");
+const boxes=[["You"],["Broker"],["Transfer","agent"],["Custo-","dian"],["Fund"]];
+const bx=[8,86,164,242,320];
+bx.forEach((x,i)=>{
+  if(i<4) mk("line",{x1:x+72,y1:220,x2:x+78,y2:220,stroke:INK,"stroke-width":2},chain);
+  mk("path",{d:`M${x-3},196 L${x+36},176 L${x+75},196 Z`,fill:BARN},chain);
+  mk("rect",{x:x,y:196,width:72,height:50,fill:CARD,stroke:INK,"stroke-width":1.8},chain);
+  const L=boxes[i]; L.forEach((t,j)=>mk("text",{x:x+36,y:L.length===1?225:217+j*14,"font-size":11.5,"text-anchor":"middle"},chain,t));
+});
+
+const net=$("#net"); const nodes=[];
+for(let i=0;i<8;i++){const a=i/8*Math.PI*2-Math.PI/2;const x=200+Math.cos(a)*92,y=214+Math.sin(a)*78;
+  const g=mk("g",{},net); mk("line",{x1:200,y1:214,x2:x,y2:y,stroke:"#9FB3EA","stroke-width":1.2},g);
+  mk("rect",{x:x-11,y:y-11,width:22,height:22,rx:3,fill:CARD,stroke:RAIL,"stroke-width":1.6},g);
+  [-4,0,4].forEach(d=>mk("line",{x1:x-6,y1:y+d,x2:x+6,y2:y+d,stroke:RAIL,"stroke-width":1},g)); nodes.push(g);}
+
+const b5c=$("#b5c");
+const slots=[["Collateral",160],["Payments",215],["Trading apps",270]];
+const slotEls=slots.map(([t,y])=>{const g=mk("g",{},b5c);const r=mk("rect",{x:220,y:y-20,width:150,height:40,rx:20,fill:CARD,stroke:INK,"stroke-width":1.8},g);mk("circle",{cx:242,cy:y,r:11,fill:"none",stroke:INK,"stroke-width":1.4,"stroke-dasharray":"2 2"},g);mk("text",{x:262,y:y+5,"font-size":13},g,t);return {g,r};});
+const tokC=mk("circle",{cx:80,cy:215,r:16,fill:RAIL},b5c);
+mk("text",{x:80,y:255,"font-size":11,"text-anchor":"middle",fill:DIM},b5c,"Your tokens");
+
+const who=$("#who");
+const whoL=["Companies parking spare cash","Traders posting collateral","Everyday money apps, someday"];
+const whoEls=whoL.map((t,i)=>{const y=140+i*56;const g=mk("g",{},who);mk("rect",{x:40,y:y,width:320,height:42,rx:6,fill:i===2?"none":CARD,stroke:i===2?RAIL:INK,"stroke-width":1.8,"stroke-dasharray":i===2?"5 4":"0"},g);mk("circle",{cx:64,cy:y+21,r:7,fill:i===2?RAIL:INK},g);mk("text",{x:82,y:y+26,"font-size":14,fill:i===2?RAIL:INK},g,t);return g;});
+
+/* ---------- timeline ---------- */
+if(!window.gsap){ $("#play").disabled=true; $("#cap").textContent="Animation library failed to load. Reload to try again."; return; }
+const tl=gsap.timeline({paused:true,onUpdate:sync,onComplete:()=>setPlaying(false)});
+SCENES.forEach(([id,,start],i)=>{
+  const el=$("#"+id); const end=i<SCENES.length-1?SCENES[i+1][2]:TOTAL;
+  tl.addLabel(id,start);
+  if(i>0) tl.fromTo(el,{autoAlpha:0},{autoAlpha:1,duration:.5,immediateRender:false},start);
+  if(i<SCENES.length-1) tl.to(el,{autoAlpha:0,duration:.4},end-.4);
+});
+tl.fromTo("#hosts",{autoAlpha:0},{autoAlpha:1,duration:.5,immediateRender:false},5);
+tl.to("#hosts",{autoAlpha:0,duration:.4},87.6);
+const E="power2.inOut";
+const blink=(sel,t)=>tl.to(sel,{scaleY:.1,transformOrigin:"50% 50%",duration:.07,yoyo:true,repeat:1},t);
+const look=(sel,x,t,d=.25)=>tl.to(sel,{x:x,duration:d,ease:"power1.out"},t);
+// s0
+tl.from("#s0 .kicker",{autoAlpha:0,y:8,duration:.5},.1).from("#s0 h2",{autoAlpha:0,y:14,duration:.7},.3).from("#s0 p",{autoAlpha:0,duration:.5},1);
+look("#tPEyes",2.4,2.2); look("#tPEyes",0,3.6); blink("#tHEyes",3);
+// hosts acting
+blink("#hEyes",8); blink("#pEyes",14.5); blink("#hEyes",20.5); blink("#pEyes",31); blink("#hEyes",37); blink("#pEyes",42.8); blink("#hEyes",58.5); blink("#pEyes",67);blink("#hEyes",80.5);
+look("#pEyes",2.6,9.6); look("#pEyes",0,12.6);
+look("#hEyes",-2.6,47.2); look("#hEyes",0,49.6);
+look("#pEyes",2.6,47.4); look("#pEyes",0,49.6);
+look("#hEyes",-2.6,73,.4); look("#hEyes",0,76.6);
+look("#pEyes",2.6,74.2); look("#pEyes",0,76.6);
+// s1
+tl.from("#acct",{autoAlpha:0,y:20,duration:.7},5.4);
+tl.from("#zzz text",{autoAlpha:0,y:12,stagger:.5,duration:.6},7);
+tl.to("#zzz",{y:-8,duration:3,ease:"sine.inOut"},9);
+// s2
+tl.from("#people circle",{autoAlpha:0,scale:0,transformOrigin:"50% 50%",stagger:.08,duration:.4},13.4);
+tl.from("#fund",{autoAlpha:0,scale:.6,svgOrigin:"200 266",duration:.6},14);
+tl.from("#bills g",{autoAlpha:0,x:20,stagger:.15,duration:.5},17.5);
+tl.set([...blue2,...out2,...gold2,...goldBack],{autoAlpha:0},13);
+blue2.forEach((d,i)=>{tl.set(d,{autoAlpha:1},14.8+i*.18);tl.to(d,{attr:{cx:200,cy:225},duration:1.3,ease:E},14.8+i*.18);tl.set(d,{autoAlpha:0},16.11+i*.18);});
+out2.forEach((d,i)=>{tl.set(d,{autoAlpha:1},18.4+i*.2);tl.to(d,{attr:{cx:338,cy:billY[i]+17},duration:1.1,ease:E},18.4+i*.2);tl.set(d,{autoAlpha:0},19.51+i*.2);});
+gold2.forEach((d,i)=>{tl.set(d,{autoAlpha:1},22+i*.2);tl.to(d,{attr:{cx:200,cy:225},duration:1,ease:E},22+i*.2);tl.set(d,{autoAlpha:0},23.01+i*.2);});
+goldBack.forEach((d,i)=>{tl.set(d,{autoAlpha:1},23.6+i*.12);tl.to(d,{attr:{cx:50,cy:peopleY[i]},duration:1.1,ease:E},23.6+i*.12);});
+tl.from("#peg",{autoAlpha:0,y:8,duration:.5},24.4);
+tl.to("#peg",{scale:1.08,svgOrigin:"200 289",yoyo:true,repeat:1,duration:.3},25.2);
+// s3
+tl.from("#chain > *",{autoAlpha:0,stagger:.03,duration:.3},27.4);
+tl.from("#clock",{autoAlpha:0,duration:.4},28.5);
+tl.from("#order",{autoAlpha:0,duration:.2},29);
+tl.to("#order",{attr:{cx:122},duration:1.4,ease:E},29.4).to("#order",{attr:{cx:200},duration:1.4,ease:E},31);
+tl.to("#clkA",{opacity:0,duration:.1},32.2).to("#clkB",{opacity:1,duration:.1},32.2);
+tl.from("#closed",{autoAlpha:0,scale:1.6,svgOrigin:"240 220",duration:.35,ease:"back.out(2)"},32.5);
+tl.from("#settle",{autoAlpha:0,y:6,duration:.5},34);
+// s4
+tl.from("#cert",{autoAlpha:0,y:16,duration:.6},38.4);
+tl.to("#cert",{autoAlpha:0,scale:.4,rotation:-20,svgOrigin:"200 214",duration:.6,ease:"power2.in"},40.6);
+tl.from("#token",{autoAlpha:0,scale:.2,rotation:90,svgOrigin:"200 214",duration:.7,ease:"back.out(1.6)"},41);
+tl.from(nodes,{autoAlpha:0,scale:0,svgOrigin:"200 214",stagger:.1,duration:.5},43);
+tl.from("#netlbl",{autoAlpha:0,duration:.5},44.5);
+tl.to("#token",{scale:1.06,svgOrigin:"200 214",yoyo:true,repeat:3,duration:.35},46.6);
+// s5
+tl.set("#b5b",{autoAlpha:0},50).set("#b5c",{autoAlpha:0},50).set("#okA",{autoAlpha:0},50);
+tl.from("#b5a",{autoAlpha:0,duration:.5},50.3);
+tl.to("#tokA",{attr:{cx:315},duration:1.6,ease:E},51.8);
+tl.fromTo("#okA",{autoAlpha:0},{autoAlpha:1,duration:.3,immediateRender:false},53.5);
+tl.to("#b5a",{autoAlpha:0,duration:.4},55.6).to("#b5b",{autoAlpha:1,duration:.4},56);
+tl.from("#ctr",{scale:.9,svgOrigin:"200 210",duration:.4},56);
+tl.to("#b5b",{autoAlpha:0,duration:.4},61.6).to("#b5c",{autoAlpha:1,duration:.4},62);
+tl.from(slotEls.map(s=>s.g),{autoAlpha:0,x:16,stagger:.15,duration:.4},62.3);
+tl.to(tokC,{attr:{cx:242,cy:160,r:11},duration:1.2,ease:E},63.6);
+tl.to(slotEls[0].r,{attr:{stroke:RAIL,"stroke-width":3},duration:.3},64.8);
+tl.to(tokC,{attr:{cx:242,cy:215},duration:.9,ease:E},65.6);
+tl.to(slotEls[0].r,{attr:{stroke:INK,"stroke-width":1.8},duration:.3},65.6).to(slotEls[1].r,{attr:{stroke:RAIL,"stroke-width":3},duration:.3},66.4);
+// s6
+tl.from(whoEls,{autoAlpha:0,y:14,stagger:.7,duration:.5},68.6);
+// s7
+tl.from("#fine li",{autoAlpha:0,x:-12,stagger:1.1,duration:.5},77.8);
+// s8
+tl.from("#s8 .title-card",{autoAlpha:0,y:12,duration:.7},88.3);
+tl.from("#eHTips circle",{autoAlpha:0,scale:0,transformOrigin:"50% 50%",stagger:.25,duration:.35,ease:"back.out(2)"},89.2);
+tl.set("#eHTips",{opacity:1},89.2);
+look("#eHEyes",-2.4,90.2); look("#ePEyes",2.4,90.4);
+tl.to("#eHMouth",{opacity:0,duration:.15},91.6).to("#eHSmile",{opacity:1,duration:.15},91.6);
+look("#ePEyes",3.2,92.2,.12);
+
+/* ---------- sync UI ---------- */
+const cap=$("#cap"),bubble=$("#bubble"),scrub=$("#scrub"),time=$("#time"),ctr=$("#ctr"),day=$("#day"),s5hl=$("#s5hl");
+const S5HL=[[50,"It moves any hour."],[56,"It earns every day."],[62,"It plugs into other apps."]];
+const fmt=s=>{s=Math.max(0,Math.round(s));return Math.floor(s/60)+":"+String(s%60).padStart(2,"0");};
+let lastCap=null,lastHl=null,lastQ=null,scrubbing=false,chipBtns=[];
+function sync(){
+  const t=tl.time();
+  let c="";for(const [ct,tx] of CAPS){if(t>=ct)c=tx;}
+  if(c!==lastCap){cap.textContent=c;lastCap=c;}
+  let q=null;for(const Q of QUIPS){if(t>=Q[0]&&t<Q[1])q=Q;}
+  if(q!==lastQ){ if(q){bubble.textContent=q[3];bubble.className="bubble on "+q[2]+(q[0]>=88?" end":"");} else {bubble.className="bubble "+(lastQ?lastQ[2]+(lastQ[0]>=88?" end":""):"");} lastQ=q; }
+  let h=S5HL[0][1];for(const [ht,tx] of S5HL){if(t>=ht)h=tx;}
+  if(h!==lastHl){s5hl.textContent=h;lastHl=h;}
+  const f=Math.min(1,Math.max(0,(t-57)/4)); const days=f*3;
+  ctr.textContent="$"+(10000+1.10*days).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+  day.textContent="Day "+Math.min(3,Math.floor(days)+1)+"  +$"+(1.10*days).toFixed(2);
+  if(!scrubbing) scrub.value=Math.round(tl.progress()*1000);
+  time.textContent=fmt(t)+" / "+fmt(TOTAL);
+  let cur=0;SCENES.forEach(([, ,st],i)=>{if(t>=st)cur=i;});
+  chipBtns.forEach((b,i)=>b.classList.toggle("on",i===cur));
+}
+
+const playBtn=$("#play");
+function setPlaying(p){playBtn.textContent=p?"Pause":(tl.progress()>=1?"Replay":"Play");}
+playBtn.addEventListener("click",()=>{
+  if(tl.isActive()){tl.pause();setPlaying(false);}
+  else{if(tl.progress()>=1)tl.restart();else tl.play();setPlaying(true);}
+});
+$("#restart").addEventListener("click",()=>{tl.restart();setPlaying(true);});
+scrub.addEventListener("input",()=>{scrubbing=true;tl.pause();tl.progress(scrub.value/1000);setPlaying(false);scrubbing=false;});
+const chips=$("#chips");
+chipBtns=SCENES.map(([id,name])=>{const b=document.createElement("button");b.type="button";b.textContent=name;b.addEventListener("click",()=>{tl.seek(id);sync();});chips.appendChild(b);return b;});
+$("#clean").addEventListener("click",e=>{const on=$("#stage").classList.toggle("clean");e.currentTarget.setAttribute("aria-pressed",on);e.currentTarget.textContent=on?"Show captions":"Hide captions";});
+$("#fs").addEventListener("click",()=>{const s=$("#stage");try{const p=s.requestFullscreen&&s.requestFullscreen();if(p&&p.catch)p.catch(()=>{});}catch(e){}});
+
+/* storyboard: narrator + quips merged by time */
+const rows=[...CAPS.filter(c=>c[1]).map(c=>({t:c[0],w:"Narrator",x:c[1],q:false})),...QUIPS.map(q=>({t:q[0],w:NAMES[q[2]],x:q[3],q:true}))].sort((a,b)=>a.t-b.t);
+const sb=$("#script");
+rows.forEach(r=>{const tr=document.createElement("tr");if(r.q)tr.className="q";tr.innerHTML='<td class="t"></td><td class="w"></td><td></td>';
+  tr.children[0].textContent=fmt(r.t);tr.children[1].textContent=r.w;tr.children[2].textContent=r.x;
+  tr.addEventListener("click",()=>{tl.pause();tl.seek(r.t+.6);setPlaying(false);sync();});sb.appendChild(tr);});
+
+tl.progress(0); sync();
+})();
+</script>
+
+</body></html>
